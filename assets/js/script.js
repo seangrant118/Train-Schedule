@@ -12,6 +12,10 @@ $(document).ready(function () {
   };
   firebase.initializeApp(config);
 
+  // create database variable
+
+  var database = firebase.database();
+
   // on submit
 
   $("#submit").on('click', function(event) {
@@ -53,12 +57,6 @@ $(document).ready(function () {
     var timeRemaining = difference % trainFrequency;
     var timeUntilNextTrain = trainFrequency - timeRemaining;
     var nextTrain = moment().add(timeUntilNextTrain, "minutes");
-    console.log(firstTrainConverted);
-    console.log(currentTime);
-    console.log(difference);
-    console.log(timeRemaining);
-    console.log(timeUntilNextTrain);
-    console.log(nextTrain);
 
     // write next arrival to page
 
@@ -72,5 +70,20 @@ $(document).ready(function () {
     minutesAway.text(timeUntilNextTrain);
     newRow.append(minutesAway);
 
+    // save to firebase
+
+    database.ref().set({
+      trainName: trainName,
+      trainDestination: trainDestination,
+      firstTrain: firstTrain,
+      trainFrequency: trainFrequency,
+      nextTrain: nextTrain,
+      timeUntilNextTrain: timeUntilNextTrain
+    });
+
+  })
+
+  database.ref().on("value", function(snapshot) {
+    
   })
 })
